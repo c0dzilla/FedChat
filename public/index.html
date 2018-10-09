@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <link rel="stylesheet" href="./style.css">
+        <title>
+            GoChat
+        </title>
+    </head>
+    <body>
+        <h1>GoChat</h1>
+        <label for="email">email</label>
+        <input id="email">
+        <label for="username">username</label>
+        <input id="username">
+        <div id=msgList class="container-fluid">
+            <div class="msgCon" class="row">
+                <div class="msgEmail" class="col-sm-2"></div>
+                <div class="msgUsername" class="col-sm-2"></div>
+                <div class="msgMsg" class="col-sm-8"></div>
+            </div>
+        </div>
+        <div id="msgBox">
+            <input id="msg">
+            <input id="msg-submit" type="submit" name="send">
+        </div>
+    </body>
+    <script src="./app.js"></script>
+</html>

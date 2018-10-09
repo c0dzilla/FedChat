@@ -1,0 +1,29 @@
+#msgBox {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    padding: 10px;
+    align-content: center;
+    width: 100vw;
+}
+
+#msg {
+    width: 80vw;
+    flex-grow: 1;
+}
+
+#msg-submit {
+    width: 10vw;
+}
+
+input {
+    margin: 5px;
+}
+
+body {
+    margin: 5px;
+}
+
+h1 {
+    text-align: center;
+}
