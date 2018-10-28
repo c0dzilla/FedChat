@@ -21,6 +21,7 @@ type Server struct {
 	Address string `json:"address"`
 }
 
+var mode = flag.String("mode", "default", "Server mode: Central/Regular")
 var address = flag.String("addr", "default", "Central Server Address")
 var clients = make(map[*websocket.Conn]bool)
 var servers = make(map[*websocket.Conn]bool)
@@ -134,13 +135,53 @@ func handleMessages() {
 	}
 }
 
+func handleCentralConnections(w http.ResponseWriter, r *http.Request) {
+	ws, err := upgrader.Upgrade(w, r, nil)
+
+	if err != nil {
+		log.Printf("error: %v", err)
+	}
+	servers[ws] = true
+	server := Server{Address: r.RemoteAddr}
+	connect <- server
+}
+
+// don't send to new server
+func emitServers() {
+	for {
+		newServer := <-connect
+
+		for server := range servers {
+			err := server.WriteJSON(newServer)
+
+			if err != nil {
+				log.Printf("error: %v", err)
+			}
+		}
+	}
+}
+
+func sendServers() {
+
+}
+
+// Serve clients: central server
+func Serve() {
+	http.HandleFunc("/ws", handleConnections)
+	go sendServers()
+}
+
 func main() {
 	flag.Parse()
+
+	if *mode == "central" {
+		http.HandleFunc("/ws/central", handleCentralConnections)
+		go emitServers()
+	}
 	fs := http.FileServer(http.Dir("../public"))
 	http.Handle("/", fs)
 	http.HandleFunc("/ws", handleConnections)
 	http.HandleFunc("/ws/servers", handleServerConnections)
-
 	go listenForServers()
 	go handleServers()
 	go handleMessages()
