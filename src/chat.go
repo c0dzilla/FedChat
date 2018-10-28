@@ -21,7 +21,7 @@ type Server struct {
 	Address string `json:"address"`
 }
 
-var address = flag.String("addr", "localhost:8080", "Central Server Address")
+var address = flag.String("addr", "default", "Central Server Address")
 var clients = make(map[*websocket.Conn]bool)
 var servers = make(map[*websocket.Conn]bool)
 var broadcast = make(chan Message)
@@ -29,6 +29,10 @@ var connect = make(chan Server)
 var upgrader = websocket.Upgrader{}
 
 func listenForServers() {
+	if *address == "default" {
+		log.Printf("No argument provided: Not connecting to central server...\n Enjoy as a standalone chat!")
+		return
+	}
 	centralServerURL := url.URL{Scheme: "ws", Host: *address, Path: "/ws"}
 	ws, _, err := websocket.DefaultDialer.Dial(centralServerURL.String(), nil)
 
