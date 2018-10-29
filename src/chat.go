@@ -29,6 +29,9 @@ var broadcast = make(chan Message)
 var connect = make(chan Server)
 var upgrader = websocket.Upgrader{}
 
+// holds websocket of newly joined server(only used by central server)
+var newlyJoinedServer *websocket.Conn
+
 func listenForServers() {
 	if *address == "default" {
 		log.Printf("No argument provided: Not connecting to central server...\n Enjoy as a standalone chat!")
@@ -146,12 +149,14 @@ func handleCentralConnections(w http.ResponseWriter, r *http.Request) {
 	connect <- server
 }
 
-// don't send to new server
 func emitServers() {
 	for {
 		newServer := <-connect
 
 		for server := range servers {
+			if server == newlyJoinedServer {
+				continue
+			}
 			err := server.WriteJSON(newServer)
 
 			if err != nil {
@@ -161,22 +166,21 @@ func emitServers() {
 	}
 }
 
-func sendServers() {
-
-}
-
 // Serve clients: central server
 func Serve() {
 	http.HandleFunc("/ws", handleConnections)
-	go sendServers()
+	go emitServers()
 }
 
 func main() {
 	flag.Parse()
 
 	if *mode == "central" {
-		http.HandleFunc("/ws/central", handleCentralConnections)
+		log.Println("Starting central server...")
+		http.HandleFunc("/ws", handleCentralConnections)
 		go emitServers()
+		startServer()
+		return
 	}
 	fs := http.FileServer(http.Dir("../public"))
 	http.Handle("/", fs)
@@ -185,7 +189,10 @@ func main() {
 	go listenForServers()
 	go handleServers()
 	go handleMessages()
+	startServer()
+}
 
+func startServer() {
 	log.Println("Listening at port 8080")
 	err := http.ListenAndServe(":8080", nil)
 
