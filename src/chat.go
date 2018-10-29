@@ -28,6 +28,7 @@ var address = flag.String("addr", "default", "Central Server Address")
 var clients = make(map[*websocket.Conn]bool)
 var servers = make(map[*websocket.Conn]bool)
 var broadcast = make(chan Message)
+var serverBroadcast = make(chan Message)
 var connect = make(chan Server)
 var upgrader = websocket.Upgrader{}
 
@@ -112,31 +113,44 @@ func handleServerConnections(w http.ResponseWriter, r *http.Request) {
 			delete(servers, ws)
 			break
 		}
-		broadcast <- msg
+		serverBroadcast <- msg
+	}
+}
+
+func emitToClients(msg Message) {
+	for client := range clients {
+		err := client.WriteJSON(msg)
+		if err != nil {
+			log.Printf("error: %v", err)
+			client.Close()
+			delete(clients, client)
+		}
+	}
+}
+
+func emitToServers(msg Message) {
+	for server := range servers {
+		err := server.WriteJSON(msg)
+		if err != nil {
+			log.Printf("error: %v", err)
+			server.Close()
+			delete(servers, server)
+		}
 	}
 }
 
 func handleMessages() {
 	for {
 		msg := <-broadcast
+		emitToClients(msg)
+		emitToServers(msg)
+	}
+}
 
-		for client := range clients {
-			err := client.WriteJSON(msg)
-			if err != nil {
-				log.Printf("error: %v", err)
-				client.Close()
-				delete(clients, client)
-			}
-		}
-
-		for server := range servers {
-			err := server.WriteJSON(msg)
-			if err != nil {
-				log.Printf("error: %v", err)
-				server.Close()
-				delete(servers, server)
-			}
-		}
+func handleServerMessages() {
+	for {
+		msg := <-serverBroadcast
+		emitToClients(msg)
 	}
 }
 
@@ -196,6 +210,7 @@ func main() {
 	go listenForServers()
 	go handleServers()
 	go handleMessages()
+	go handleServerMessages()
 	startServer(8080)
 }
 
