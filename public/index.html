@@ -10,16 +10,20 @@
         </title>
     </head>
     <body>
-        <h1>GoChat</h1>
-        <label for="email">email</label>
-        <input id="email">
-        <label for="username">username</label>
-        <input id="username">
-        <div id=msgList class="container-fluid">
+        <div class="go-head"><h1>GoChat</h1></div>
+        <div class="user-info">
+            <label for="email">E-mail ID : </label>
+            <input id="email">
+            <label for="username">Username : </label>
+            <input id="username">
+        </div>
+        <br>
+        <br>
+        <div id=msgList>
             <div class="msgCon" class="row">
-                <div class="msgEmail col-sm-2"></div>
-                <div class="msgUsername col-sm-2"></div>
-                <div class="msgMsg col-sm-8"></div>
+                <div class="msgEmail col-sm-2"><b><i>Email</b></i></div>
+                <div class="msgUsername col-sm-2"><b><i>Username</i></b></div>
+                <div class="msgMsg col-sm-8"><b><i>Message</b></i></div>
             </div>
         </div>
         <div id="msgBox">
