@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
+	"strings"
 
 	"github.com/gorilla/websocket"
 )
@@ -147,15 +148,16 @@ func handleCentralConnections(w http.ResponseWriter, r *http.Request) {
 	}
 	servers[ws] = true
 	newlyJoinedServer = ws
-	log.Println(r.RemoteAddr + " joined as server...")
-	server := Server{Address: r.RemoteAddr}
+	remoteAddr := strings.Split(r.RemoteAddr, ":")[0] + ":8080"
+	log.Println(remoteAddr + " joined as server...")
+	server := Server{Address: remoteAddr}
 	connect <- server
 }
 
 func emitServers() {
 	for {
 		newServer := <-connect
-		log.Printf("Emitting newly joined server's address to connected servers...\n")
+		log.Println("Emitting " + newServer.Address + " to connected servers...")
 
 		for server := range servers {
 			if server == newlyJoinedServer {
