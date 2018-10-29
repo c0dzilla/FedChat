@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"strconv"
 
 	"github.com/gorilla/websocket"
 )
@@ -145,6 +146,8 @@ func handleCentralConnections(w http.ResponseWriter, r *http.Request) {
 		log.Printf("error: %v", err)
 	}
 	servers[ws] = true
+	newlyJoinedServer = ws
+	log.Println(r.RemoteAddr + " joined as server...")
 	server := Server{Address: r.RemoteAddr}
 	connect <- server
 }
@@ -152,6 +155,7 @@ func handleCentralConnections(w http.ResponseWriter, r *http.Request) {
 func emitServers() {
 	for {
 		newServer := <-connect
+		log.Printf("Emitting newly joined server's address to connected servers...\n")
 
 		for server := range servers {
 			if server == newlyJoinedServer {
@@ -163,6 +167,7 @@ func emitServers() {
 				log.Printf("error: %v", err)
 			}
 		}
+		log.Printf("Done: Emitted")
 	}
 }
 
@@ -179,7 +184,7 @@ func main() {
 		log.Println("Starting central server...")
 		http.HandleFunc("/ws", handleCentralConnections)
 		go emitServers()
-		startServer()
+		startServer(8090)
 		return
 	}
 	fs := http.FileServer(http.Dir("../public"))
@@ -189,12 +194,13 @@ func main() {
 	go listenForServers()
 	go handleServers()
 	go handleMessages()
-	startServer()
+	startServer(8080)
 }
 
-func startServer() {
-	log.Println("Listening at port 8080")
-	err := http.ListenAndServe(":8080", nil)
+func startServer(port int) {
+	log.Printf("Listening at port %d", port)
+	portString := ":" + strconv.Itoa(port)
+	err := http.ListenAndServe(portString, nil)
 
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
