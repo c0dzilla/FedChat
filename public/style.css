@@ -1,3 +1,25 @@
+body {
+    background-image: url('./assets/mainbg.jpg')
+}
+
+.go-head {
+    position: absolute;
+    top: 0px;
+    background-color: black;
+    color: white;
+    width: 100vw;
+    height: 10vh;
+    margin: 0;
+}
+
+.user-info {
+    position: absolute;
+    top: 10vh;
+    opacity: 10%;
+    left: 30vw;
+    border-bottom: solid black;  
+}
+
 #msgBox {
     display: flex;
     position: fixed;
@@ -14,13 +36,19 @@
 
 #msg-submit {
     width: 10vw;
+    background-color: black;
+    color: white;
+}
+
+#msgList {
+    margin-top: 12vh;   
+}
+
+
+.msgEmail {
 }
 
 input {
-    margin: 5px;
-}
-
-body {
     margin: 5px;
 }
 
