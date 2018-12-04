@@ -7,10 +7,26 @@ Federation refers to different machines agreeing upon a set of standards to oper
 ## Architecture
 
 ```
-   		 ________          ____________		 ________________	   ____________		 ________
-		|        |        |            |        |		 |	  |	       |	|        |
-   		| Client | <----> | Homeserver | <----> | Central Server | <----> | Homeserver | <----> | Client |
-   		|________|        |____________|        |________________|	  |____________|        |________|
+   		 ________          ____________		 ________________
+		|        |        |            |        |		 |		
+   		| Client | <----> | Homeserver | <----> | Central Server |
+   		|________|        |____________|        |________________|		
+								 ^
+   							         |
+								 |
+								 v
+							 ________________
+							|		 |
+							|   Homeserver   |
+							|________________|
+								 ^
+								 |
+								 |
+								 v
+							   ____________
+							  |	       |
+							  |   Client   |
+							  |____________|
 
 ```
 
@@ -18,24 +34,28 @@ Whenever a homeserver is created, it emits its IP address to the central server.
                              
 ## Setup
 
-2. Clone the repository under `src` in your `$GOPATH`:
-... ` cd $GOPATH/src && git clone https://github.com/c0dzilla/FedChat.git `
+1. Clone the repository under `src` in your `$GOPATH`:
+
+   ``` cd $GOPATH/src && git clone https://github.com/c0dzilla/FedChat.git ```
 
 2. Generate the binary:
-... ` cd src/ && go install chat.go `
+
+   ``` cd src/ && go install chat.go ```
 
 3. To run as central server:
-... ` ./chat.go -mode=central `
+
+   ``` cd $GOPATH/bin && ./chat.go -mode=central ```
 
 4. To run as homeserver:
-... ` ./chat.go -address=<IP address of central server>
+
+   ``` cd $GOPATH/bin && ./chat.go -address=<IP address of central server> ```
 
 5. If the IP of central server is not supplied to the homeserver, it works as a standalone chat. Hence, to run as a simple chat application:
-... ` ./chat.go `
+
+   ``` cd $GOPATH/bin && ./chat.go ```
+
+   When used as a homeserver/standalone chat, the user can access the chat client at port 8080 of the server's address.
 
 ## Contributing
 
-Contributions are welcome. Feel free to open an issue or file a pull request. Effectively being a prototype, the current implementation is in-memory. It would be nice to have persistent storage in future.
-
-
-
+Contributions are welcome. Feel free to open an issue or file a pull request.
