@@ -44,15 +44,15 @@ Whenever a homeserver is created, it emits its IP address to the central server.
 
 3. To run as central server:
 
-   ``` cd $GOPATH/bin && ./chat.go -mode=central ```
+   ``` cd $GOPATH/bin && ./chat -mode=central ```
 
 4. To run as homeserver:
 
-   ``` cd $GOPATH/bin && ./chat.go -address=<IP address of central server> ```
+   ``` cd $GOPATH/bin && ./chat -address=<IP address of central server> ```
 
 5. If the IP of central server is not supplied to the homeserver, it works as a standalone chat. Hence, to run as a simple chat application:
 
-   ``` cd $GOPATH/bin && ./chat.go ```
+   ``` cd $GOPATH/bin && ./chat ```
 
    When used as a homeserver/standalone chat, the user can access the chat client at port 8080 of the server's address.
 
