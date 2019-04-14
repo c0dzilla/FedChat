@@ -6,55 +6,52 @@ Federation refers to different machines agreeing upon a set of standards to oper
 
 ## Architecture
 
-```
-   		 ________          ____________		 ________________
-		|        |        |            |        |		 |		
-   		| Client | <----> | Homeserver | <----> | Central Server |
-   		|________|        |____________|        |________________|		
-								 ^
-   							         |
-								 |
-								 v
-							 ________________
-							|		 |
-							|   Homeserver   |
-							|________________|
-								 ^
-								 |
-								 |
-								 v
-							   ____________
-							  |	       |
-							  |   Client   |
-							  |____________|
 
+### Registration of newly-joined homeserver
+
+```
+	 _____________		   ________________
+	|	      |    ip	  |		   | emit to all connected home servers
+	|  Homeserver | --------> | Central Server |----------------------------------->
+	|_____________|		  |________________|
+
+```
+
+### Messaging
+
+```
+   		 ________          ____________		 ____________	       ________
+		|        |        |            |        |	     |	      |	       |
+   		| Client | <----> | Homeserver | <----> | Homeserver | <----> | Client |
+   		|________|        |____________|        |____________|	      |________|
+					
 ```
 
 Whenever a homeserver is created, it emits its IP address to the central server. The job of the central server is to simply relay this information to all connected homeservers.
                              
 ## Setup
 
-1. Clone the repository under `src` in your `$GOPATH`:
+1. Install the package using `go get`.
 
-   ``` cd $GOPATH/src && git clone https://github.com/c0dzilla/FedChat.git ```
+   ```
+	go get github.com/c0dzilla/FedChat/src
+   ```
 
-2. Generate the binary:
+2. To run a homeserver and connect to the broader federation network:
 
-   ``` cd src/ && go install chat.go ```
+   ```
+	cd $GOPATH/bin
+	./src -address=<IP address of central server
+   ```
 
-3. To run as central server:
+3. If the IP of central server is not supplied to the homeserver, it works as a standalone chat. Hence, to run as a simple chat application:
 
-   ``` cd $GOPATH/bin && ./chat -mode=central ```
+   ``` 
+	cd $GOPATH/bin
+	./chat
+   ```
 
-4. To run as homeserver:
-
-   ``` cd $GOPATH/bin && ./chat -address=<IP address of central server> ```
-
-5. If the IP of central server is not supplied to the homeserver, it works as a standalone chat. Hence, to run as a simple chat application:
-
-   ``` cd $GOPATH/bin && ./chat ```
-
-   When used as a homeserver/standalone chat, the user can access the chat client at port 8080 of the server's address.
+4.  Homeservers run at port 8080 by default.
 
 ## Contributing
 
