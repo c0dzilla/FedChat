@@ -6,28 +6,25 @@ Federation refers to different machines agreeing upon a set of standards to oper
 
 ## Architecture
 
-```
-   		 ________          ____________		 ________________
-		|        |        |            |        |		 |		
-   		| Client | <----> | Homeserver | <----> | Central Server |
-   		|________|        |____________|        |________________|		
-								 ^
-   							         |
-								 |
-								 v
-							 ________________
-							|		 |
-							|   Homeserver   |
-							|________________|
-								 ^
-								 |
-								 |
-								 v
-							   ____________
-							  |	       |
-							  |   Client   |
-							  |____________|
 
+### Registration of newly-joined homeserver
+
+```
+	 _____________		   ________________
+	|	      |    ip	  |		   | emit to all connected home servers
+	|  Homeserver | --------> | Central Server |----------------------------------->
+	|_____________|		  |________________|
+
+```
+
+### Messaging
+
+```
+   		 ________          ____________		 ____________	       ________
+		|        |        |            |        |	     |	      |	       |
+   		| Client | <----> | Homeserver | <----> | Homeserver | <----> | Client |
+   		|________|        |____________|        |____________|	      |________|
+					
 ```
 
 Whenever a homeserver is created, it emits its IP address to the central server. The job of the central server is to simply relay this information to all connected homeservers.
