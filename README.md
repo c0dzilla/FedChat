@@ -33,19 +33,25 @@ Whenever a homeserver is created, it emits its IP address to the central server.
 
 1. Install the package using `go get`.
 
-```  go get github.com/c0dzilla/FedChat/src ```
+   ```
+	go get github.com/c0dzilla/FedChat/src
+   ```
 
 2. To run a homeserver and connect to the broader federation network:
 
-   ``` cd $GOPATH/bin
-./src -address=<IP address of central server ```
+   ```
+	cd $GOPATH/bin
+	./src -address=<IP address of central server
+   ```
 
-5. If the IP of central server is not supplied to the homeserver, it works as a standalone chat. Hence, to run as a simple chat application:
+3. If the IP of central server is not supplied to the homeserver, it works as a standalone chat. Hence, to run as a simple chat application:
 
-   ``` cd $GOPATH/bin
-./chat ```
+   ``` 
+	cd $GOPATH/bin
+	./chat
+   ```
 
-6.  Homeservers run at port 8080 by default.
+4.  Homeservers run at port 8080 by default.
 
 ## Contributing
 
