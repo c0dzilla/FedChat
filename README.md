@@ -41,7 +41,7 @@ Whenever a homeserver is created, it emits its IP address to the central server.
 
    ```
 	cd $GOPATH/bin
-	./src -address=<IP address of central server
+	./src -address=<IP address of central server>
    ```
 
 3. If the IP of central server is not supplied to the homeserver, it works as a standalone chat. Hence, to run as a simple chat application:
